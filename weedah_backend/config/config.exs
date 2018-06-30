@@ -5,6 +5,11 @@
 # is restricted to this project.
 use Mix.Config
 
+config :weedah, Weedah.Cache,
+  adapter: Nebulex.Adapters.Local,
+  gc_interval: 86_400 # 24 hrs
+
+
 # General application configuration
 config :weedah,
   ecto_repos: [Weedah.Repo]

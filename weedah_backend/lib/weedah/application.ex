@@ -14,6 +14,9 @@ defmodule Weedah.Application do
       supervisor(WeedahWeb.Endpoint, []),
       # Start your own worker by calling: Weedah.Worker.start_link(arg1, arg2, arg3)
       # worker(Weedah.Worker, [arg1, arg2, arg3]),
+
+      #Nebulex https://hexdocs.pm/nebulex/getting-started.html
+      supervisor(Weedah.Cache, []),
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
