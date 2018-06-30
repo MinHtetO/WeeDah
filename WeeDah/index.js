@@ -1,6 +1,22 @@
 import { AppRegistry } from "react-native";
-import App from "./App";
 import Login from "./src/Components/Login";
-//import Map from "./src/Components/User/Map";
+import { Navigation } from "react-native-navigation";
+import VendorMain from "./src/Components/Vendor/VendorMain";
+import UserMap from "./src/Components/User/Map";
+import UserSearch from "./src/Components/User/Search";
+import Drawer from "./src/Components/Drawer";
 
-AppRegistry.registerComponent("WeeDah", () => Login);
+Navigation.registerComponent("Login", () => Login);
+Navigation.registerComponent("VendorMain", () => VendorMain);
+Navigation.registerComponent("UserMap", () => UserMap);
+Navigation.registerComponent("UserSearch", () => UserSearch);
+Navigation.registerComponent("Drawer", () => Drawer);
+
+Navigation.startSingleScreenApp({
+  screen: {
+    screen: "Login",
+    title: "Welcome"
+  }
+});
+
+// AppRegistry.registerComponent("WeeDah", () => Login);

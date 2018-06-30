@@ -9,23 +9,7 @@ import {
 } from "react-native";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 
-export default class Map extends Component {
-  constructor(props) {
-    super(props);
-    this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent);
-  }
-  onNavigatorEvent = event => {
-    console.log("event");
-    if (event.type === "NavBarButtonPress") {
-      if (event.id === "toggle") {
-        console.log("toggle");
-        this.props.navigator.toggleDrawer({
-          side: "left"
-        });
-      }
-    }
-  };
-
+class VendorMain extends Component {
   state = {
     focusedLocation: {
       latitude: 37.7900352,
@@ -71,7 +55,7 @@ export default class Map extends Component {
   };
 
   componentDidMount() {
-    //setInterval(() => this.changeCoor(), 10);
+    setInterval(() => this.changeCoor(), 10);
   }
 
   pickLocationHandler = event => {
@@ -95,11 +79,10 @@ export default class Map extends Component {
   };
 
   getLocationHandler = () => {
-    console.log(navigator.geolocation.getCurrentPosition);
-
     navigator.geolocation.getCurrentPosition(
       pos => {
         alert(pos.coords.latitude + "," + pos.coords.longitude);
+
         const coordsEvent = {
           nativeEvent: {
             coordinate: {
@@ -116,14 +99,6 @@ export default class Map extends Component {
         alert("Fetching the Position failed, please pick one manually!");
       }
     );
-
-    let onSuccess = () => {
-      console.log("success");
-    };
-
-    let onError = () => {
-      console.log("error");
-    };
   };
 
   handleMarkerPress(event) {
@@ -190,3 +165,5 @@ const styles = StyleSheet.create({
     borderRadius: 20
   }
 });
+
+export default VendorMain;
