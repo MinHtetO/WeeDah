@@ -2,7 +2,7 @@ defmodule WeedahWeb.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  # channel "room:*", WeedahWeb.RoomChannel
+  channel "room:*", WeedahWeb.RoomChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket
