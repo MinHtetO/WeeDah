@@ -59,8 +59,7 @@ export default class App extends Component {
 const styles = StyleSheet.create({
   icon: {
     height: 45,
-    width: 45,
-    marginTop: 20
+    width: 45
   },
   container: {
     flex: 1,
