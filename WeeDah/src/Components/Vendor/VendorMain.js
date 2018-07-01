@@ -5,10 +5,13 @@ import {
   Button,
   StyleSheet,
   Text,
-  Dimensions
+  Dimensions,
+  TouchableOpacity
 } from "react-native";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
-
+import vendor from "../../globalData";
+import pushLoc from "./LocationPush";
+import { Socket } from "../../WebSocket/PheonixSocket";
 class VendorMain extends Component {
   state = {
     focusedLocation: {
@@ -35,50 +38,66 @@ class VendorMain extends Component {
           longitude: -122.406415
         }
       }
-    ]
+    ],
+    sellState: false
   };
 
-  changeCoor = () => {
-    this.setState(prevState => {
-      return {
-        markers: prevState.markers.map(marker => {
-          return {
-            title: marker.title,
-            coordinates: {
-              latitude: marker.coordinates.latitude + 0.00000009,
-              longitude: marker.coordinates.longitude + 0.0000009
-            }
-          };
-        })
-      };
-    });
-  };
-
-  componentDidMount() {
-    setInterval(() => this.changeCoor(), 10);
+  constructor(props) {
+    super(props);
+    console.log("inside vendor");
+    console.log(vendor.id);
   }
 
-  pickLocationHandler = event => {
-    const coords = event.nativeEvent.coordinate;
-    this.map.animateToRegion({
-      ...this.state.focusedLocation,
-      latitude: coords.latitude,
-      longitude: coords.longitude
-    });
-    this.setState(prevState => {
-      return {
-        focusedLocation: {
-          ...prevState.focusedLocation,
-          latitude: coords.latitude,
-          longitude: coords.longitude
-        },
-        locationChosen: true
-      };
-    });
-    //alert("latitude "+ this.state.focusedLocation.latitude+" longitude "+ this.state.focusedLocation.longitude)
-  };
+  // changeCoor = () => {
+  //   this.setState(prevState => {
+  //     return {
+  //       markers: prevState.markers.map(marker => {
+  //         return {
+  //           title: marker.title,
+  //           coordinates: {
+  //             latitude: marker.coordinates.latitude + 0.00000009,
+  //             longitude: marker.coordinates.longitude + 0.0000009
+  //           }
+  //         };
+  //       })
+  //     };
+  //   });
+  // };
+
+  toggle = () => {};
+  sell = () => {};
+
+  stop = () => {};
 
   getLocationHandler = () => {
+    const TIMEOUT = 100000;
+    const URL = vendor.socketUrl;
+    const LOBBY = "room:lobby";
+    console.log("before URL");
+    console.log(URL);
+    const socket = new Socket(URL);
+    console.log(socket);
+    socket.onOpen(event => console.log("Connected."));
+    socket.onError(event => console.log("Cannot connect."));
+    socket.onClose(event => console.log("Goodbye."));
+    console.log("before connect");
+    socket.connect();
+    console.log("after connect");
+    const chan = socket.channel("room:lobby", { name: "vendor location push" });
+    console.log(chan);
+    chan
+      .join()
+      .receive("ignore", () => console.log("Access denied."))
+      .receive("ok", () => console.log("Access granted."))
+      .receive("timeout", () => console.log("Must be a MongoDB."));
+    console.log("after chan join");
+    chan.on("vendor_info", msg => {
+      console.log("client is getting broadcast data");
+      console.log(msg);
+    });
+    console.log("after chan onnnnn join");
+  };
+  getLocationHandler2 = () => {
     navigator.geolocation.getCurrentPosition(
       pos => {
         alert(pos.coords.latitude + "," + pos.coords.longitude);
@@ -121,27 +140,11 @@ class VendorMain extends Component {
 
     return (
       <View style={styles.container}>
-        <MapView
-          provider={PROVIDER_GOOGLE}
-          initialRegion={this.state.focusedLocation}
-          style={styles.map}
-          onPress={this.pickLocationHandler}
-          ref={ref => (this.map = ref)}
-        >
-          {marker}
-          {this.state.markers.map(marker => (
-            <MapView.Marker
-              key={Math.random()}
-              onPress={event => this.handleMarkerPress(event)}
-              coordinate={marker.coordinates}
-              title={marker.title}
-              pinColor={"#ff00000"}
-            />
-          ))}
-        </MapView>
-        <View style={styles.button}>
-          <Button title="Locate Me" onPress={this.getLocationHandler} />
-        </View>
+        <TouchableOpacity styles={styles.sellBtn}>
+          <Text style={styles.textBtn}>
+            {this.sellState ? "ရောင်းတာရပ်မယ်" : "စရောင်းမယ်"}
+          </Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -149,20 +152,21 @@ class VendorMain extends Component {
 const styles = StyleSheet.create({
   container: {
     width: "100%",
+    justifyContent: "center",
     alignItems: "center"
   },
-  map: {
-    width: "100%",
-    height: "90%"
+  sellBtn: {
+    marginTop: 30,
+    width: 400,
+    height: 400,
+    padding: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 200
   },
-  button: {
-    margin: 8
-  },
-  bubble: {
-    backgroundColor: "rgba(255,255,255,0.7)",
-    paddingHorizontal: 18,
-    paddingVertical: 12,
-    borderRadius: 20
+  textBtn: {
+    color: "white",
+    fontSize: 30
   }
 });
 

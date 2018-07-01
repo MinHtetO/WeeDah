@@ -17,6 +17,7 @@ import userIcon from "../Image/userIcon.png";
 import Icon from "react-native-vector-icons/Ionicons";
 import { Navigation } from "react-native-navigation";
 import { theme } from "../Style/theme";
+import vendor from "../globalData";
 
 // import backgroundImage4 from "./src/image/background.jpg4";
 
@@ -93,6 +94,8 @@ export default class Login extends Component {
   }
 
   goVendor() {
+    console.log(vendor.id);
+    vendor.id = 206;
     this.props.navigator.resetTo({
       screen: "VendorMain", // unique ID registered with Navigation.registerScreen
       title: "Wee Dah", // navigation bar title of the pushed screen (optional)

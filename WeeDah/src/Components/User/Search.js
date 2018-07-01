@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { View, Text, TextInput, Button, StyleSheet } from "react-native";
-import Navigator from "react-native-navigation";
+import { Navigation } from "react-native-navigation";
 
 class Search extends Component {
   constructor(props) {
@@ -19,24 +19,21 @@ class Search extends Component {
     }
   };
   gg() {
-    this.props.navigator.showModal({
-      screen: "Login", // unique ID registered with Navigation.registerScreen
-      title: "Modal", // title of the screen as appears in the nav bar (optional)
-      passProps: {}, // simple serializable object that will pass as props to the modal (optional)
-      navigatorStyle: {}, // override the navigator style for the screen, see "Styling the navigator" below (optional)
-      animationType: "slide-up" // 'none' / 'slide-up' , appear animation for the modal (optional, default 'slide-up')
+    Navigation.showLightBox({
+      screen: "Drawer", // unique ID registered with Navigation.registerScreen
+      passProps: {}, // simple serializable object that will pass as props to the lightbox (optional)
+      style: {
+        backgroundBlur: "light", // 'dark' / 'light' / 'xlight' / 'none' - the type of blur on the background
+        backgroundColor: "red", // tint color for the background, you can specify alpha here (optional)
+        tapBackgroundToDismiss: true // dismisses LightBox on background taps (optional)
+      }
     });
   }
   render() {
     return (
       <View style={styles.container}>
-        <Text>Search</Text>
-        <Button
-          title="Click"
-          onPress={() => {
-            this.gg();
-          }}
-        />
+        <Text></Text>
+        
       </View>
     );
   }
